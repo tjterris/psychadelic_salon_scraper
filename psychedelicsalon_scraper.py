@@ -3,7 +3,6 @@ from os import system
 import os.path
 from bs4 import BeautifulSoup
 import time
-import re
 
 SITE = 'https://psychedelicsalon.com/'
 PODCASTS_PAGE = SITE + '/podcasts/'
@@ -46,8 +45,7 @@ for link in pot.find_all('a'):
                     break
 
                 time.sleep(5) # be respectful and don't spam
-                dl = system("wget {}".format(file_url))
-                print dl
+                system("wget {}".format(file_url))
 
             except Exception as e:
                 print e
