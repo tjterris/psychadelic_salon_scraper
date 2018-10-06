@@ -1,5 +1,6 @@
 from urllib2 import urlopen
 from os import system
+import os.path
 from bs4 import BeautifulSoup
 import time
 import re
@@ -30,13 +31,23 @@ for link in pot.find_all('a'):
             page = urlopen(podcast_page)
             cup = BeautifulSoup(page, 'html.parser') # page with podcast d/l link
             spoon = cup.find("div", {"class": "powerpress_player"})
-            bite = spoon.find('a')
-            file_url = bite.get('href')
-            time.sleep(30) # be respectful and don't spam
-            title = podcast_page.replace(SITE, "")[:-1]
 
             try:
-                f = system("wget {}".format(file_url))
+                bite = spoon.find('a')
+            except Exception as e:
+                print e
+
+            file_url = bite.get('href')
+            f = file_url[file_url.rfind("/")+1:]
+
+            try:
+                if os.path.isfile(f):
+                    print "{} already exists, skipping.".format(f)
+                    break
+
+                time.sleep(5) # be respectful and don't spam
+                dl = system("wget {}".format(file_url))
+                print dl
 
             except Exception as e:
                 print e
